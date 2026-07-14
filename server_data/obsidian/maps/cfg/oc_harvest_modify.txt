@@ -1,0 +1,101 @@
+// Создаем главный логический реле-узел для приема сигналов баса
+SpawnEntity
+{
+    "classname" "logic_relay"
+    "targetname" "beat_relay"
+    
+    // Как только бот присылает триггер, заставляем фермерские таймеры тикать быстрее
+    "OnTrigger" "crop_grow_timer*,FireTimer,,0,-1"
+    "OnTrigger" "pumpkin_grow_timer*,FireTimer,,0,-1"
+    
+    // Даем игрокам экономический бонус: при мощном басе ферма приносит на 5% больше очков
+    "OnTrigger" "money_multiplier,Multiply,1.05,0,-1"
+}
+
+// 1. Создаем невидимый импульсный взрыв для физики баса
+SpawnEntity
+{
+    "classname" "env_physexplosion"
+    "targetname" "bass_physical_kick"
+    "origin" "-1160 520 130" // Координаты амбара (настройте под нужную точку)
+    "magnitude" "250"        // Сила толчка (чтобы пропсы весело прыгали, но не улетали в космос)
+    "radius" "400"           // Радиус действия танцпола
+    "spawnflags" "1"         // Флаг 1: Использовать только физический толчок БЕЗ нанесения урона
+}
+
+// 2. Создаем кастомный диско-прожектор
+SpawnEntity
+{
+    "classname" "light_dynamic"
+    "targetname" "light_dance"
+    "origin" "-1160 520 130" // Вешаем под потолок амбара
+    "_light" "255 0 255 200" // Насыщенный неоновый фиолетовый цвет
+    "distance" "500"
+    "spotlight_radius" "200"
+    "style" "0"
+}
+
+// 3. Подвязываем это к нашему главному beat_relay
+AddOutput
+{
+    "targetname" "beat_relay"
+    "OnTrigger" "bass_physical_kick,Explode,,0,-1"
+    
+    // Случайным образом переключаем цвета прожектора в такт музыке
+    "OnTrigger" "light_dance,Color,255 0 0,0.05,-1"   // Вспышка красного
+    "OnTrigger" "light_dance,Color,0 255 255,0.1,-1"  // Вспышка циана
+}
+
+
+// 1. Реле, активирующее режим полной тишины и паники
+SpawnEntity
+{
+    "classname" "logic_relay"
+    "targetname" "trigger_silence"
+    
+    // Выключаем общее освещение карты (погружаем ферму во тьму)
+    "OnTrigger" "light_environment,TurnOff,,0,-1"
+    "OnTrigger" "ambient_skybox_light,TurnOff,,0,-1"
+    
+    // Включаем жуткую сирену на всю карту
+    "OnTrigger" "panic_siren,PlaySound,,0,-1"
+    
+    // Активируем скрытые спавнеры монстров из темноты
+    "OnTrigger" "zombie_forest_spawner,Enable,,0,-1"
+    "OnTrigger" "zombie_forest_spawner,Spawn,,0.5,-1"
+}
+
+// 2. Реле, возвращающее все в норму при возобновлении трека
+SpawnEntity
+{
+    "classname" "logic_relay"
+    "targetname" "trigger_resume_music"
+    
+    "OnTrigger" "light_environment,TurnOn,,0,-1"
+    "OnTrigger" "panic_siren,StopSound,,0,-1"
+    "OnTrigger" "zombie_forest_spawner,Disable,,0,-1"
+    
+    // Уничтожаем оставшихся "ночных" зомби, чтобы не мешали фармить днем
+    "OnTrigger" "npc_fastzombie,Kill,,0,-1" 
+}
+
+// 3. Звук сирены паники
+SpawnEntity
+{
+    "classname" "ambient_generic"
+    "targetname" "panic_siren"
+    "message" "ambient/alarms/siren1.wav" // Стандартный страшный звук из HL2
+    "health" "10" // Громкость (10 - максимум)
+    "spawnflags" "16" // Начать выключенным, играть на всю карту
+}
+
+SpawnEntity
+{
+    "classname" "npc_template_maker"
+    "targetname" "zombie_forest_spawner"
+    "origin" "1400 -800 190" // <--- Точка в глуши леса
+    "TemplateName" "zombie_spawn_template"
+    "MaxNPCCount" "8"
+    "SpawnFrequency" "1"
+    "StartDisabled" "1"
+}
