@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # Сервис 1: Игровой сервер Obsidian Conflict (Windows-версия на Linux через Wine)
   game-server:
-    image: iamthefij/wine-steamcmd:latest
+    image: ich777/steamcmd:latest
     container_name: oc_game_server
     volumes:
       # Постоянное хранилище для файлов игры на жестком диске Linux-сервера
