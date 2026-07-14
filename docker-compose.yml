@@ -7,18 +7,22 @@ services:
     container_name: oc_game_server
     volumes:
       # Постоянное хранилище для файлов игры на жестком диске Linux-сервера
-      - ./server_data:/home/steam/oc_server
-      - ./server/server.cfg:/home/steam/oc_server/obsidian/cfg/server.cfg:ro
+      - ./server_data:/serverdata/serverfiles
+      - ./server/server.cfg:/serverdata/serverfiles/obsidian/cfg/server.cfg:ro
     ports:
       - "27015:27015/udp" # Игровой трафик
       - "27015:27015/tcp" # RCON трафик
     environment:
       - RCON_PASSWORD=${RCON_PASSWORD}
-    # Инструкция для Linux: запускаем SteamCMD, обновляем Source SDK 2013, затем стартуем сервер через Wine
+      - GAMEID=244300      # AppID для Source SDK Base 2013 Dedicated Server
+      - GAMEPARAMS=-game obsidian -console -port 27015 +map oc_harvest +maxplayers 8 +rcon_password ${RCON_PASSWORD} -noscripting
+      - VALIDATE=true      # Проверять файлы игры при запуске
+      - USERNAME=anonymous # Анонимный вход в Steam
     command: >
       bash -c "
-      steamcmd +login anonymous +force_install_dir /home/steam/oc_server +app_update 244300 validate +quit &&
-      wine /home/steam/oc_server/srcds.exe -game obsidian -console -port 27015 +map oc_harvest +maxplayers 8 +rcon_password ${RCON_PASSWORD} -noscripting
+      /serverdata/steamcmd/steamcmd.sh +login anonymous +force_install_dir /serverdata/serverfiles +app_update 244300 validate +quit &&
+      cd /serverdata/serverfiles &&
+      ./srcds_run -game obsidian -console -port 27015 +map oc_harvest +maxplayers 8 +rcon_password ${RCON_PASSWORD} -noscripting
       "
     restart: unless-stopped
 
