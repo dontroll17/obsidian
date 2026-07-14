@@ -33,6 +33,8 @@ services:
       - RCON_PORT=27015
       - RCON_PASSWORD=${RCON_PASSWORD}
       - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - SERVER_REAL_IP=${SERVER_IP}
+      - NOTIFY_CHANNEL_ID=${DISCORD_CHANNEL_ID}
     restart: unless-stopped
 
   # Сервис 3: Быстрая загрузка файлов для игроков (FastDL)
