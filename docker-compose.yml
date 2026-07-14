@@ -8,7 +8,7 @@ services:
     volumes:
       # Постоянное хранилище для файлов игры на жестком диске Linux-сервера
       - ./server_data:/serverdata/serverfiles
-      - ./server/server.cfg:/serverdata/serverfiles/obsidian/cfg/server.cfg:ro
+      - ./server/server.cfg:/serverdata/serverfiles/obsidian/cfg/server.cfg
     ports:
       - "27015:27015/udp" # Игровой трафик
       - "27015:27015/tcp" # RCON трафик
@@ -17,13 +17,8 @@ services:
       - GAMEID=244300      # AppID для Source SDK Base 2013 Dedicated Server
       - GAMEPARAMS=-game obsidian -console -port 27015 +map oc_harvest +maxplayers 8 +rcon_password ${RCON_PASSWORD} -noscripting
       - VALIDATE=true      # Проверять файлы игры при запуске
-      - USERNAME=anonymous # Анонимный вход в Steam
-    command: >
-      bash -c "
-      /serverdata/steamcmd/steamcmd.sh +login anonymous +force_install_dir /serverdata/serverfiles +app_update 244300 validate +quit &&
-      cd /serverdata/serverfiles &&
-      ./srcds_run -game obsidian -console -port 27015 +map oc_harvest +maxplayers 8 +rcon_password ${RCON_PASSWORD} -noscripting
-      "
+      - GAMEEXEC=srcds_run
+      - GAMEUSER=anonymous # Анонимный вход в Steam
     restart: unless-stopped
 
   # Сервис 2: Наш Discord-бот
