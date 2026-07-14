@@ -13,6 +13,8 @@ SERVER_IP = os.getenv("SERVER_IP", "game-server")
 RCON_PORT = int(os.getenv("RCON_PORT", 27015))
 RCON_PASSWORD = os.getenv("RCON_PASSWORD", "secret")
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
+SERVER_REAL_IP = os.getenv("SERVER_REAL_IP", "0.0.0.0")
+NOTIFY_CHANNEL_ID = os.getenv("NOTIFY_CHANNEL_ID")
 
 class OCControlBot(commands.Bot):
     def __init__(self):
@@ -56,7 +58,30 @@ async def execute_rcon(command: str) -> str:
 @bot.event
 async def on_ready():
     print(f"Робот {bot.user.name} вошел в сеть и готов к глобальным ивентам!")
-    # Устанавливаем статус бота в Discord
+    if NOTIFY_CHANNEL_ID:
+        try:
+            channel = bot.get_channel(int(NOTIFY_CHANNEL_ID))
+            if channel:
+                # Создаем красивую эмбед-плашку
+                embed = discord.Embed(
+                    title="🚜 Ферма OC_HARVEST успешно запущена!", 
+                    description="Игровой сервер развернут из Git и готов принимать фермеров-рейверов.", 
+                    color=discord.Color.green()
+                )
+                embed.add_field(name="🌐 IP адрес сервера:", value=f"`{SERVER_REAL_IP}:27015`", inline=False)
+                embed.add_field(
+                    name="⌨️ Команда для консоли игры (~):", 
+                    value=f"```text\nconnect {SERVER_REAL_IP}:27015\n```", 
+                    inline=False
+                )
+                embed.add_field(name="📻 FastDL статус:", value="✅ Активен (карты качаются быстро)", inline=True)
+                embed.set_footer(text="Введите /play [ссылка_vk], чтобы запустить музыку и физику баса")
+                
+                await channel.send(embed=embed)
+                print("Уведомление об успешном запуске отправлено в Дискорд!")
+        except Exception as e:
+            print(f"Не удалось отправить уведомление в канал: {e}")
+
     await bot.change_presence(activity=discord.Game(name="Obsidian Conflict"))
 
 # =================================================================
