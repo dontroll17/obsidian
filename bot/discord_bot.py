@@ -10,11 +10,11 @@ from discord import app_commands
 from discord.ext import commands
 
 # Считываем настройки из переменных окружения, которые прокинул Docker
-SERVER_IP = os.getenv("SERVER_IP", "game-server")
+SERVER_IP = os.getenv("SERVER_IP")
 RCON_PORT = int(os.getenv("RCON_PORT", 27015))
-RCON_PASSWORD = os.getenv("RCON_PASSWORD", "secret")
+RCON_PASSWORD = os.getenv("RCON_PASSWORD")
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-SERVER_REAL_IP = os.getenv("SERVER_REAL_IP", "0.0.0.0")
+SERVER_REAL_IP = os.getenv("SERVER_REAL_IP")
 NOTIFY_CHANNEL_ID = os.getenv("NOTIFY_CHANNEL_ID")
 
 class OCControlBot(commands.Bot):
