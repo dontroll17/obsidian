@@ -14,7 +14,7 @@ services:
       - "27015:27015/tcp" # RCON трафик
     environment:
       - RCON_PASSWORD=${RCON_PASSWORD}
-      - GAMEID=244300      # AppID для Source SDK Base 2013 Dedicated Server
+      - GAMEAPPID=244300      # AppID для Source SDK Base 2013 Dedicated Server
       - GAMEPARAMS=-game obsidian -console -port 27015 +map oc_harvest +maxplayers 8 +rcon_password ${RCON_PASSWORD} -noscripting
       - VALIDATE=true      # Проверять файлы игры при запуске
       - GAMEEXEC=srcds_run
