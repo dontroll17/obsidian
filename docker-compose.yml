@@ -2,25 +2,18 @@
 services:
   # Сервис 1: Игровой сервер Obsidian Conflict (Windows-версия на Linux через Wine)
   game-server:
-    image: ich777/steamcmd:latest
+    image: rouhim/steamcmd-wine:latest
     container_name: oc_game_server
     privileged: true
     volumes:
       # Постоянное хранилище для файлов игры на жестком диске Linux-сервера
-      - ./server_data:/serverdata/serverfiles
-      - ./server/server.cfg:/serverdata/serverfiles/obsidian/cfg/server.cfg
-      - ./steam_logs:/serverdata/Steam/logs
+      - ./server_data:/data
+      - ./server/server.cfg:/data/obsidian/cfg/server.cfg
     ports:
       - "27015:27015/udp" # Игровой трафик
       - "27015:27015/tcp" # RCON трафик
     environment:
-      - GAME_ID=1002       # Фейковый AppID (Dedicated Server Tool), чтобы обмануть скрипт контейнера
-      - GAME_NAME=obsidian
-      - GAME_CONFIG=tail   # Подменяем исполняемый файл на tail, чтобы контейнер не падал
-      - GAME_PARAMS=-f /dev/null
-      - VALIDATE=false
-      - USERNAME=blank
-      - PASSWRD=blank
+      - STEAM_APP_ID=244300
     restart: unless-stopped
 
   # Сервис 2: Наш Discord-бот
