@@ -14,8 +14,8 @@ SERVER_IP = os.getenv("SERVER_IP")
 RCON_PORT = int(os.getenv("RCON_PORT", 27015))
 RCON_PASSWORD = os.getenv("RCON_PASSWORD")
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-SERVER_REAL_IP = os.getenv("SERVER_REAL_IP")
-NOTIFY_CHANNEL_ID = os.getenv("NOTIFY_CHANNEL_ID")
+SERVER_REAL_IP = os.getenv("SERVER_REAL_IP", SERVER_IP)
+NOTIFY_CHANNEL_ID = os.getenv("DISCORD_CHANNEL_ID")
 
 class OCControlBot(commands.Bot):
     def __init__(self):
