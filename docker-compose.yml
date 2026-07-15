@@ -15,15 +15,7 @@ services:
       - "27015:27015/tcp" # RCON трафик
     environment:
       - RCON_PASSWORD=${RCON_PASSWORD}
-      - GAME_ID=244300     # Инструкция для скачивания Source SDK Base 2013
-      - GAME_NAME=obsidian # Имя папки мода
-      # ВАЖНО: Перенаправляем поиск исполняемого файла на srcds_run
-      - GAME_CONFIG=srcds_run
-      # Параметры запуска (без дублирования -game, контейнер подставит его сам из GAME_NAME)
-      - GAME_PARAMS=-console -port 27015 +map oc_harvest +maxplayers 8 +rcon_password ${RCON_PASSWORD} -noscripting
-      - VALIDATE=true
-      - USERNAME=blank
-      - PASSWRD=blank
+    entrypoint: ["tail", "-f", "/dev/null"]
     restart: unless-stopped
 
   # Сервис 2: Наш Discord-бот
