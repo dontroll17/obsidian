@@ -15,16 +15,15 @@ services:
       - "27015:27015/tcp" # RCON трафик
     environment:
       - RCON_PASSWORD=${RCON_PASSWORD}
-    entrypoint: >
-      bash -c "
-      echo '=== ИНИЦИАЛИЗАЦИЯ STEAMCMD ===' &&
-      mkdir -p /serverdata/serverfiles &&
-      steamcmd +login anonymous +force_install_dir /serverdata/serverfiles +app_update 244300 validate +quit &&
-      echo '=== ЗАПУСК СЕРВЕРА OBSIDIAN CONFLICT ===' &&
-      cd /serverdata/serverfiles &&
-      chmod +x srcds_run srcds_linux || true &&
-      exec ./srcds_run -game obsidian -console -port 27015 +map oc_harvest +maxplayers 8 +rcon_password ${RCON_PASSWORD} -noscripting
-      "
+      - GAME_ID=244300     # Инструкция для скачивания Source SDK Base 2013
+      - GAME_NAME=obsidian # Имя папки мода
+      # ВАЖНО: Перенаправляем поиск исполняемого файла на srcds_run
+      - GAME_CONFIG=srcds_run
+      # Параметры запуска (без дублирования -game, контейнер подставит его сам из GAME_NAME)
+      - GAME_PARAMS=-console -port 27015 +map oc_harvest +maxplayers 8 +rcon_password ${RCON_PASSWORD} -noscripting
+      - VALIDATE=true
+      - USERNAME=blank
+      - PASSWRD=blank
     restart: unless-stopped
 
   # Сервис 2: Наш Discord-бот
