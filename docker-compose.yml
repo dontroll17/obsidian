@@ -14,8 +14,13 @@ services:
       - "27015:27015/udp" # Игровой трафик
       - "27015:27015/tcp" # RCON трафик
     environment:
-      - RCON_PASSWORD=${RCON_PASSWORD}
-    entrypoint: ["tail", "-f", "/dev/null"]
+      - GAME_ID=1002       # Фейковый AppID (Dedicated Server Tool), чтобы обмануть скрипт контейнера
+      - GAME_NAME=obsidian
+      - GAME_CONFIG=tail   # Подменяем исполняемый файл на tail, чтобы контейнер не падал
+      - GAME_PARAMS=-f /dev/null
+      - VALIDATE=false
+      - USERNAME=blank
+      - PASSWRD=blank
     restart: unless-stopped
 
   # Сервис 2: Наш Discord-бот
