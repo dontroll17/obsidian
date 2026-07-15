@@ -18,10 +18,11 @@ services:
     entrypoint: >
       bash -c "
       echo '=== ИНИЦИАЛИЗАЦИЯ STEAMCMD ===' &&
-      /serverdata/steamcmd/steamcmd.sh +login anonymous +force_install_dir /serverdata/serverfiles +app_update 244300 validate +quit &&
+      mkdir -p /serverdata/serverfiles &&
+      steamcmd +login anonymous +force_install_dir /serverdata/serverfiles +app_update 244300 validate +quit &&
       echo '=== ЗАПУСК СЕРВЕРА OBSIDIAN CONFLICT ===' &&
       cd /serverdata/serverfiles &&
-      chmod +x srcds_run srcds_linux &&
+      chmod +x srcds_run srcds_linux || true &&
       exec ./srcds_run -game obsidian -console -port 27015 +map oc_harvest +maxplayers 8 +rcon_password ${RCON_PASSWORD} -noscripting
       "
     restart: unless-stopped
