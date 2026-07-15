@@ -15,14 +15,11 @@ services:
       - "27015:27015/tcp" # RCON трафик
     environment:
       - RCON_PASSWORD=${RCON_PASSWORD}
-    entrypoint: >
-      bash -c "
-      echo '=== STARTING STEAMCMD UPDATE ===' &&
-      /serverdata/steamcmd/steamcmd.sh +login anonymous +force_install_dir /serverdata/serverfiles +app_update 244300 validate +quit &&
-      echo '=== RUNNING OBSIDIAN CONFLICT ===' &&
-      cd /serverdata/serverfiles &&
-      exec ./srcds_run -game obsidian -console -port 27015 +map oc_harvest +maxplayers 8 +rcon_password ${RCON_PASSWORD} -noscripting
-      "
+      - PRE_UPDATE_SCRIPT=steamcmd +login anonymous +force_install_dir /serverdata/serverfiles +app_update 244300 validate +quit
+      # Переменные для запуска (их контейнер выполнит сразу после пре-скрипта)
+      - GAMEID=244300 
+      - GAMEEXEC=srcds_run
+      - GAMEPARAMS=-game obsidian -console -port 27015 +map oc_harvest +maxplayers 8 +rcon_password ${RCON_PASSWORD} -noscripting
     restart: unless-stopped
 
   # Сервис 2: Наш Discord-бот
