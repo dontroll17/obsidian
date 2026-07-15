@@ -14,11 +14,12 @@ services:
       - "27015:27015/tcp" # RCON трафик
     environment:
       - RCON_PASSWORD=${RCON_PASSWORD}
-      - GAMEAPPID=244300      # AppID для Source SDK Base 2013 Dedicated Server
-      - GAMEPARAMS=-game obsidian -console -port 27015 +map oc_harvest +maxplayers 8 +rcon_password ${RCON_PASSWORD} -noscripting
-      - VALIDATE=true      # Проверять файлы игры при запуске
-      - GAMEEXEC=srcds_run
-      - GAMEUSER=anonymous # Анонимный вход в Steam
+      - GAME_ID=244300      # AppID для Source SDK Base 2013 Dedicated Server
+      - GAME_NAME=obsidian
+      - USERNAME=blank     # По документации образа: 'blank' для анонимного входа
+      - PASSWRD=blank      # По документации образа: 'blank' для анонимного входа
+      # Параметры запуска передаем через GAME_PARAMS (без дублирования -game и -port)
+      - GAME_PARAMS=-console +map oc_harvest +maxplayers 8 +rcon_password ${RCON_PASSWORD} -noscripting
     restart: unless-stopped
 
   # Сервис 2: Наш Discord-бот
