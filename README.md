@@ -8,14 +8,17 @@
 obsidian/
 ├── docker-compose.yml           # Основная конфигурация Docker Compose (4 сервиса)
 ├── README.md                    # Документация
+├── point.sh                     # Исходный скрипт запуска сервера (оригинал)
+├── entrypoint.sh                # Docker entrypoint на основе point.sh
+├── .env.example                 # Пример конфигурации переменных
 ├── oc_harvest_modify.txt       # Конфигурация игровых триггеров и реле
-├── bot/                        # Код Discord бота
-│   ├── Dockerfile              # Dockerfile для бота
-│   ├── discord_bot.py          # Основной код бота
-│   └── requirements.txt        # Зависимости Python
-├── server/                     # Конфигурация игрового сервера
-│   └── server.cfg              # Основной конфиг сервера
-└── server_data/                # Данные сервера (создается автоматически)
+├── bot/                         # Код Discord бота
+│   ├── Dockerfile               # Dockerfile для бота
+│   ├── discord_bot.py           # Основной код бота
+│   └── requirements.txt         # Зависимости Python
+├── server/                      # Конфигурация игрового сервера
+│   └── server.cfg               # Основной конфиг сервера
+└── server_data/                 # Данные сервера (создается автоматически)
 ```
 
 ## Архитектура системы
@@ -23,10 +26,11 @@ obsidian/
 Система состоит из **4 независимых сервисов**, работающих в изолированных контейнерах:
 
 ### 1. Игровой сервер (game-server)
-- **Образ**: `iamthefij/wine-steamcmd:latest` (Windows SteamCMD на Linux через Wine)
+- **Образ**: `cm2network/steamcmd:root` (SteamCMD на Linux)
 - **Порт**: 27015 (UDP/TCP)
 - **Функция**: Source SDK сервер с модом Obsidian Conflict
 - **Управление**: RCON через Docker сеть
+- **Entrypoint**: `entrypoint.sh` (на основе оригинального `point.sh`)
 - **Хранение**: `./server_data` на хосте
 
 ### 2. Discord бот (discord-bot)
@@ -35,7 +39,7 @@ obsidian/
 - **Функция**: Управление сервером через Discord интерфейс
 - **Особенности**:
   - Слэш-команды (Slash Commands)
-  - Интерактивный музыкальный анализ (FFT бас-детекция)
+  - Интерактивный му��ыкальный анализ (FFT бас-детекция)
   - Автоматическая синхронизация событий в игре с музыкой
 
 ### 3. FastDL веб-сервер (fastdl-web)
@@ -56,7 +60,7 @@ obsidian/
 - Docker Compose (версия 2.0+)
 - Discord токен бота (получить на [Discord Developer Portal](https://discord.com/developers/applications))
 - 4+ GB свободной оперативной памяти
-- 10+ GB свободного места на дис��е
+- 10+ GB свободного места на диске
 
 ## Установка
 
@@ -74,6 +78,12 @@ DISCORD_TOKEN=your_discord_bot_token_here
 
 # RCON Configuration (пароль для управления сервером)
 RCON_PASSWORD=your_rcon_password_here
+
+# Server IP (для FastDL и других сервисов)
+SERVER_IP=localhost
+
+# Discord Channel ID для уведомлений (опционально)
+DISCORD_CHANNEL_ID=your_channel_id_here
 ```
 
 ### 3. Запустите контейнеры
@@ -195,6 +205,7 @@ steam://connect/localhost:27015
 | `RCON_PASSWORD` | Пароль для RCON подключения | - | ✅ |
 | `SERVER_IP` | IP-адрес сервера (для FastDL) | game-server | нет |
 | `RCON_PORT` | Порт RCON | 27015 | нет |
+| `DISCORD_CHANNEL_ID` | ID канала для уведомлений | - | нет |
 
 ## Конфигурация сервера
 

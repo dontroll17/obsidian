@@ -1,6 +1,5 @@
-
 services:
-  # Сервис 1: Игровой сервер Obsidian Conflict (Windows-версия на Linux через Wine)
+  # Сервис 1: Игровой сервер Obsidian Conflict
   game-server:
     image: cm2network/steamcmd:root
     container_name: oc_game_server
@@ -10,20 +9,14 @@ services:
       - ./server_data:/home/steam/hl2dm-server
       # Пробрасываем конфиг в правильную линуксовую директорию мода
       - ./server/server.cfg:/home/steam/hl2dm-server/obsidian/cfg/server.cfg
+      # Пробрасываем entrypoint.sh для централизованного управления
+      - ./entrypoint.sh:/home/steam/entrypoint.sh
     ports:
       - "27015:27015/udp" # Игровой трафик
       - "27015:27015/tcp" # RCON трафик
     environment:
       - RCON_PASSWORD=${RCON_PASSWORD}
-    entrypoint: >
-      bash -c "
-      echo '=== ОБНОВЛЕНИЕ ДВИЖКА ЧЕРЕЗ STEAMCMD ===' &&
-      /home/steam/steamcmd/steamcmd.sh +force_install_dir /home/steam/hl2dm-server +login anonymous +app_update 232370 validate +quit &&
-      echo '=== ЗАПУСК СЕРВЕРА OBSIDIAN CONFLICT ===' &&
-      cd /home/steam/hl2dm-server &&
-      chmod +x srcds_run srcds_linux &&
-      exec ./srcds_run -game obsidian -console -port 27015 +map oc_harvest +maxplayers 8 +rcon_password ${RCON_PASSWORD} -noscripting
-      "
+    entrypoint: ["/bin/bash", "/home/steam/entrypoint.sh"]
     restart: unless-stopped
 
   # Сервис 2: Наш Discord-бот
