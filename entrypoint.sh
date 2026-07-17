@@ -13,6 +13,11 @@ SERVER_7Z_URL="https://ocdownload.raidensnakesden.net/obsidianserverhotfixspecia
 if [ ! -f "./srcds_run" ]; then
     echo "=== Папка сервера пуста. Начинаю подготовку... ==="
     
+    /usr/games/steamcmd +force_install_dir "$SERVER_DIR" \
+        +login anonymous \
+        +app_update 244630 validate \
+        +quit
+
     # Обновляем пакеты и устанавливаем p7zip для работы с .7z, а также wget
     apt-get update && apt-get install -y p7zip-full wget python3
     
