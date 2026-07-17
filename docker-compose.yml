@@ -15,7 +15,7 @@ services:
       - "27015:27015/udp" # Игровой трафик
       - "27015:27015/tcp" # RCON трафик
     environment:
-      - HOME="/home"
+      - HOME=/home/steam
       - RCON_PASSWORD=${RCON_PASSWORD}
     entrypoint: ["/bin/bash", "/home/steam/entrypoint.sh"]
     restart: unless-stopped

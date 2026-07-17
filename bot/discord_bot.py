@@ -9,6 +9,8 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+PROXY = "http://82.165.176.62:3128"
+
 # Считываем настройки из переменных окружения, которые прокинул Docker
 SERVER_IP = os.getenv("SERVER_IP")
 RCON_PORT = int(os.getenv("RCON_PORT", 27015))
@@ -22,7 +24,7 @@ class OCControlBot(commands.Bot):
         intents = discord.Intents.default()
         # Для слэш-команд текстовый интент не обязателен, но оставим для гибкости
         intents.message_content = True 
-        super().__init__(command_prefix="!", intents=intents)
+        super().__init__(command_prefix="!", intents=intents, proxy=PROXY)
 
     async def setup_hook(self):
         # Синхронизирует слэш-команды с серверами Discord при запуске
@@ -305,4 +307,4 @@ async def async_analyze_audio_stream(process):
             trigger_server_beat(intensity)
             
 # Запуск
-bot.run(DISCORD_TOKEN, proxy="http://82.165.176.62:3128")
+bot.run(DISCORD_TOKEN)
