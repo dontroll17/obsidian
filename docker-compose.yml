@@ -10,7 +10,7 @@ services:
       # Пробрасываем конфиг в правильную линуксовую директорию мода убрать для второго запуска
       #- ./server/server.cfg:/home/steam/hl-server/obsidian/cfg/server.cfg
       # Пробрасываем entrypoint.sh для централизованного управления
-      - ./entrypoint.sh:/home/steam/entrypoint.sh
+      - ./entrypoint.sh:/home/steam/entrypoint.sh:ro
     ports:
       - "27015:27015/udp" # Игровой трафик
       - "27015:27015/tcp" # RCON трафик
