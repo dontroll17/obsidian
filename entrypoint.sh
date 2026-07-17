@@ -24,4 +24,4 @@ EOF
 echo "=== Запуск выделенного сервера Obsidian Conflict ==="
 cd /home/steam/hl2dm-server &&
 chmod +x srcds_run srcds_linux &&
-exec ./srcds_run -game obsidian +maxplayers 8 +map oc_harvest -port 27015 +rcon_password ${RCON_PASSWORD:-secret}
+exec ./srcds_run -game obsidian +maxplayers 8 +map oc_harvest -port 27015 +rcon_password ${RCON_PASSWORD}
