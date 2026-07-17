@@ -1,8 +1,9 @@
 #!/bin/bash
 set -e
 
-SERVER_DIR="/home/steam/hl2dm-server"
+SERVER_DIR="/home/steam/hl-server"
 mkdir -p "$SERVER_DIR"
+chmod -R 777 "$SERVER_DIR"
 cd "$SERVER_DIR"
 
 # URL вашего архива
@@ -13,11 +14,12 @@ SERVER_7Z_URL="https://ocdownload.raidensnakesden.net/obsidianserverhotfixspecia
 if [ ! -f "./srcds_run" ]; then
     echo "=== Папка сервера пуста. Начинаю подготовку... ==="
     
-    /usr/games/steamcmd +force_install_dir "$SERVER_DIR" \
+    /home/steam/steamcmd/steamcmd.sh +force_install_dir "$SERVER_DIR" \
         +login anonymous \
-        +app_update 244630 validate \
+        +app_update 90 validate \
         +quit
-
+    
+    chmod -R 777 "$SERVER_DIR"
     # Обновляем пакеты и устанавливаем p7zip для работы с .7z, а также wget
     apt-get update && apt-get install -y p7zip-full wget python3
     
