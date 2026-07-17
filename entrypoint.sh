@@ -14,6 +14,8 @@ SERVER_7Z_URL="https://ocdownload.raidensnakesden.net/obsidianserverhotfixspecia
 if [ ! -f "./srcds_run" ]; then
     echo "=== Папка сервера пуста. Начинаю подготовку... ==="
     
+    /home/steam/steamcmd/steamcmd.sh +quit
+
     /home/steam/steamcmd/steamcmd.sh +force_install_dir "$SERVER_DIR" \
         +login anonymous \
         +app_update 232370 validate \
@@ -72,4 +74,4 @@ chmod +x srcds_run srcds_linux
 
 # Переключаемся на безопасного пользователя steam для запуска самого процесса сервера,
 # так как Valve запрещает запускать движок Source от root.
-exec su steam -c "./srcds_run -condebug -game obsidian +maxplayers 8 +map oc_harvest -port 27015 +rcon_password \"${RCON_PASSWORD}\"" 2>/dev/null
+exec su steam -c "./srcds_run -game obsidian +maxplayers 8 +map oc_harvest -port 27015 +rcon_password \"${RCON_PASSWORD}\""
