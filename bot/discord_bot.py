@@ -36,7 +36,7 @@ async def execute_rcon(command: str) -> str:
     try:
         # Создаем неблокирующее RCON-подключение
         # Передаем IP, порт, пароль и выставляем таймаут в 3 секунды, чтобы бот не ждал вечно
-        rcon = await aiorcon.AIORcon.create(
+        rcon = await aiorcon.RCON.create(
             host=SERVER_IP, 
             port=RCON_PORT, 
             password=RCON_PASSWORD,
