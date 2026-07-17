@@ -16,7 +16,7 @@ if [ ! -f "./srcds_run" ]; then
     
     /home/steam/steamcmd/steamcmd.sh +force_install_dir "$SERVER_DIR" \
         +login anonymous \
-        +app_update 90 validate \
+        +app_update 232370 validate \
         +quit
     
     chmod -R 777 "$SERVER_DIR"

@@ -6,7 +6,7 @@ services:
     privileged: true
     volumes:
       # Постоянное хранилище на жестком диске Linux-сервера
-      - ./server_data:/home/steam/hl2dm-server
+      - ./server_data:/home/steam/hl-server
       # Пробрасываем конфиг в правильную линуксовую директорию мода убрать для второго запуска
       #- ./server/server.cfg:/home/steam/hl2dm-server/obsidian/cfg/server.cfg
       # Пробрасываем entrypoint.sh для централизованного управления
