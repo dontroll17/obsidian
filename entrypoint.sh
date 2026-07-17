@@ -137,6 +137,17 @@ if [ ! -x "$SRCDS_RUN" ]; then
     # Копируем только содержимое папки 'obsidian'
     if [ -d "$MOD_TEMP/obsidian" ]; then
         cp -rn "$MOD_TEMP/obsidian/"* "$SERVER_DIR/" 2>/dev/null || true
+
+        # === 3.3. ПРОБРОС server.cfg (ПОСЛЕ установки мода) ===
+        echo "📂 Восстановление server.cfg из ./server/server.cfg"
+        if [ -f "/home/steam/hl-server/server/server.cfg" ]; then
+            mkdir -p "$SERVER_DIR/obsidian/cfg"
+            cp "/home/steam/hl-server/server/server.cfg" "$SERVER_DIR/obsidian/cfg/server.cfg"
+            echo "✅ server.cfg успешно восстановлен из ./server/server.cfg"
+        elif [ -f "$SERVER_DIR/server/server.cfg" ]; then
+            mkdir -p "$SERVER_DIR/obsidian/cfg"
+            cp "$SERVER_DIR/server/server.cfg" "$SERVER_DIR/obsidian/cfg/server.cfg"
+            echo "✅ server.cfg восстановлен (локально)"
         # Копируем root-файлы мода (например, map .bsp)
         find "$MOD_TEMP" -maxdepth 1 -type f \( -name "*.bsp" -o -name "*.vbsp" \) -exec cp {} "$SERVER_DIR/" \; 2>/dev/null || true
     else
