@@ -30,7 +30,7 @@ services:
     depends_on:
       - game-server
     environment:
-      - SERVER_IP=game-server 
+      - SERVER_IP=${SERVER_IP} 
       - RCON_PORT=27015
       - RCON_PASSWORD=${RCON_PASSWORD}
       - DISCORD_TOKEN=${DISCORD_TOKEN}
