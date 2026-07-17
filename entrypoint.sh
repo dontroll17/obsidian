@@ -3,7 +3,7 @@ set -e
 
 SERVER_DIR="/home/steam/hl-server"
 mkdir -p "$SERVER_DIR"
-chmod -R 777 "$SERVER_DIR"
+chmod -R 777 "/home/steam/"
 cd "$SERVER_DIR"
 
 # URL вашего архива
