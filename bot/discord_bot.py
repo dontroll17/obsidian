@@ -9,7 +9,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-PROXY = "http://82.165.176.62:3128"
+PROXY = "http://134.255.230.125:80"
 
 # Считываем настройки из переменных окружения, которые прокинул Docker
 SERVER_IP = os.getenv("SERVER_IP")

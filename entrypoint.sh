@@ -12,6 +12,11 @@ SERVER_7Z_URL="https://ocdownload.raidensnakesden.net/obsidianserverhotfixspecia
 # === 1. Автоматическое скачивание и распаковка ===
 # Проверяем, пуста ли папка (нет ли там главного исполняемого файла srcds_run)
 if [ ! -f "./srcds_run" ]; then
+    echo "=== 1. Исправление зависимостей steamclient.so ==="
+    # Создаем символическую ссылку, чтобы движок Source не падал в Segfault
+    mkdir -p ~/.steam/sdk32
+    ln -sf /home/steam/steamcmd/linux32/steamclient.so ~/.steam/sdk32/steamclient.so
+
     echo "=== Папка сервера пуста. Начинаю подготовку... ==="
     
     /home/steam/steamcmd/steamcmd.sh +quit
@@ -23,7 +28,7 @@ if [ ! -f "./srcds_run" ]; then
     
     chmod -R 777 "$SERVER_DIR"
     # Обновляем пакеты и устанавливаем p7zip для работы с .7z, а также wget
-    apt-get update && apt-get install -y p7zip-full wget python3
+    apt-get update && apt-get install -y p7zip-full wget python3 gosu
     
     echo "=== Скачивание архива .7z (это может занять время)... ==="
     wget -O server.7z "$SERVER_7Z_URL"
@@ -56,6 +61,10 @@ else
     echo "=== Mountfix не найден или уже был выполнен ранее. Пропускаем. ==="
 fi
 
+echo "=== 4. Создание steam_appid.txt ==="
+# Фикс для предотвращения LAN-only режима и Segfault при инициализации API
+echo "232370" > /home/steam/hl-server/steam_appid.txt
+
 # === 3. Настройка путей монтирования контента (mount.cfg) ===
 echo "=== Настройка путей монтирования контента (mount.cfg) ==="
 mkdir -p obsidian
@@ -74,4 +83,4 @@ chmod +x srcds_run srcds_linux
 
 # Переключаемся на безопасного пользователя steam для запуска самого процесса сервера,
 # так как Valve запрещает запускать движок Source от root.
-exec su steam -c "./srcds_run -game obsidian +maxplayers 8 +map oc_harvest -port 27015 +rcon_password \"${RCON_PASSWORD}\""
+exec gosu steam -c "./srcds_run -game obsidian +maxplayers 8 +map oc_harvest -port 27015 +rcon_password \"${RCON_PASSWORD}\""
