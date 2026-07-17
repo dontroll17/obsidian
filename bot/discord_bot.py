@@ -9,7 +9,6 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-PROXY = "http://46.4.96.137:3128"
 
 # Считываем настройки из переменных окружения, которые прокинул Docker
 SERVER_IP = os.getenv("SERVER_IP")
@@ -24,7 +23,7 @@ class OCControlBot(commands.Bot):
         intents = discord.Intents.default()
         # Для слэш-команд текстовый интент не обязателен, но оставим для гибкости
         intents.message_content = True 
-        super().__init__(command_prefix="!", intents=intents, proxy=PROXY)
+        super().__init__(command_prefix="!", intents=intents)
 
     async def setup_hook(self):
         # Синхронизирует слэш-команды с серверами Discord при запуске

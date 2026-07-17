@@ -9,6 +9,10 @@ cd "$SERVER_DIR"
 # URL вашего архива
 SERVER_7Z_URL="https://ocdownload.raidensnakesden.net/obsidianserverhotfixspecial.7z"
 
+dpkg --add-architecture i386
+apt update
+apt install lib32gcc-s1 lib32stdc++6 libstdc++6:i386 libtinfo5:i386 libcurl4:i386
+
 # === 1. Автоматическое скачивание и распаковка ===
 # Проверяем, пуста ли папка (нет ли там главного исполняемого файла srcds_run)
 if [ ! -f "./srcds_run" ]; then
@@ -83,4 +87,4 @@ chmod +x srcds_run srcds_linux
 
 # Переключаемся на безопасного пользователя steam для запуска самого процесса сервера,
 # так как Valve запрещает запускать движок Source от root.
-exec gosu steam ./srcds_run -game obsidian +maxplayers 8 +map oc_harvest -port 27015 +rcon_password \"${RCON_PASSWORD}\"
+exec gosu steam ./srcds_run -debug -game obsidian +maxplayers 8 +map oc_harvest -port 27015 +rcon_password \"${RCON_PASSWORD}\"
