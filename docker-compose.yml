@@ -7,8 +7,8 @@ services:
     volumes:
       # Постоянное хранилище на жестком диске Linux-сервера
       - ./server_data:/home/steam/hl2dm-server
-      # Пробрасываем конфиг в правильную линуксовую директорию мода
-      - ./server/server.cfg:/home/steam/hl2dm-server/obsidian/cfg/server.cfg
+      # Пробрасываем конфиг в правильную линуксовую директорию мода убрать для второго запуска
+      #- ./server/server.cfg:/home/steam/hl2dm-server/obsidian/cfg/server.cfg
       # Пробрасываем entrypoint.sh для централизованного управления
       - ./entrypoint.sh:/home/steam/entrypoint.sh
     ports:
