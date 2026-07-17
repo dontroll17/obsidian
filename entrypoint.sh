@@ -11,7 +11,8 @@ SERVER_7Z_URL="https://ocdownload.raidensnakesden.net/obsidianserverhotfixspecia
 
 dpkg --add-architecture i386
 apt update
-apt install lib32gcc-s1 lib32stdc++6 libstdc++6:i386 libtinfo5:i386 libcurl4:i386
+apt install lib32gcc-s1 lib32stdc++6 libstdc++6:i386 libtinfo6:i386 libcurl4:i386
+sudo ln -s /usr/lib/i386-linux-gnu/libtinfo.so.6 /usr/lib/i386-linux-gnu/libtinfo.so.5
 
 # === 1. Автоматическое скачивание и распаковка ===
 # Проверяем, пуста ли папка (нет ли там главного исполняемого файла srcds_run)
