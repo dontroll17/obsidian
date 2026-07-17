@@ -24,6 +24,9 @@ services:
   discord-bot:
     build: ./bot
     container_name: oc_discord_bot
+    dns:
+      - 77.88.8.8    # Yandex DNS
+      - 1.1.1.1 
     depends_on:
       - game-server
     environment:
