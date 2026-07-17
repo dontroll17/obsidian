@@ -305,4 +305,4 @@ async def async_analyze_audio_stream(process):
             trigger_server_beat(intensity)
             
 # Запуск
-bot.run(DISCORD_TOKEN)
+bot.run(DISCORD_TOKEN, proxy="http://45.132.18.22:8080")
