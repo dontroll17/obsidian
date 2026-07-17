@@ -31,6 +31,8 @@ class OCControlBot(commands.Bot):
 
 bot = OCControlBot()
 
+current_loop = bot.loop
+
 async def execute_rcon(command: str) -> str:
     """Полностью асинхронное ядро для отправки любых команд на игровой сервер"""
     try:
@@ -40,7 +42,8 @@ async def execute_rcon(command: str) -> str:
             host=SERVER_IP, 
             port=RCON_PORT, 
             password=RCON_PASSWORD,
-            timeout=3.0
+            timeout=3.0,
+            loop=current_loop
         )
         
         # Отправляем команду и ждем ответ от сервера игры
