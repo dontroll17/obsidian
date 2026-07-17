@@ -83,4 +83,4 @@ chmod +x srcds_run srcds_linux
 
 # Переключаемся на безопасного пользователя steam для запуска самого процесса сервера,
 # так как Valve запрещает запускать движок Source от root.
-exec gosu steam -c "./srcds_run -game obsidian +maxplayers 8 +map oc_harvest -port 27015 +rcon_password \"${RCON_PASSWORD}\""
+exec gosu steam ./srcds_run -game obsidian +maxplayers 8 +map oc_harvest -port 27015 +rcon_password \"${RCON_PASSWORD}\"
