@@ -11,18 +11,24 @@ SRCDS_RUN="$SERVER_DIR/srcds_run"
 mkdir -p "$SERVER_DIR"
 cd "$SERVER_DIR"
 
-# Добавляем 32-битную архитектуру
-dpkg --add-architecture i386 2>/dev/null || true
-
 # === 2. Установка системных зависимостей (с фиксом libtinfo5) ===
-echo "=== Установка системных зависимостей (32-bit, gosu, p7zip) ==="
+echo "=== Установка системных зависимостей (32-bit, gosu, p7zip, gnupg2, libc6-dev-i386) ==="
 export DEBIAN_FRONTEND=noninteractive
 
-# Сначала базовые зависимости
+# Сначала базовые зависимости + gnupg2 и 32-bit develop-пакеты
 apt-get update -qq && apt-get install -y --no-install-recommends \
     lib32gcc-s1 lib32stdc++6 libstdc++6:i386 libtinfo6:i386 libcurl4:i386 \
-    p7zip-full wget gosu build-essential \
+    p7zip-full wget gosu gnupg2 build-essential libc6-dev-i386 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+echo "=== Проверка компиляции 32-битного кода ==="
+echo 'int main() { return 0; }' > /tmp/test.c
+if gcc -m32 /tmp/test.c -o /tmp/test32 2>/dev/null; then
+    echo "✅ gcc -m32 работает"
+else
+    echo "❌ gcc -m32 не может создать исполняемый файл. Проверьте libc6-dev-i386."
+    exit 1
+fi
 
 # Проверяем наличие libtinfo.so.5 и устанавливаем/собираем, если её нет
 if ! ldconfig -p | grep -q 'libtinfo\.so\.5[^6]'; then
