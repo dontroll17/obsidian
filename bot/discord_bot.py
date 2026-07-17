@@ -31,13 +31,14 @@ class OCControlBot(commands.Bot):
 
 bot = OCControlBot()
 
-current_loop = bot.loop
 
 async def execute_rcon(command: str) -> str:
     """Полностью асинхронное ядро для отправки любых команд на игровой сервер"""
     try:
         # Создаем неблокирующее RCON-подключение
         # Передаем IP, порт, пароль и выставляем таймаут в 3 секунды, чтобы бот не ждал вечно
+        current_loop = asyncio.get_running_loop()
+
         rcon = await aiorcon.RCON.create(
             host=SERVER_IP, 
             port=RCON_PORT, 
