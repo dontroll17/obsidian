@@ -99,8 +99,9 @@ if [ ! -x "$SRCDS_RUN" ]; then
     /home/steam/steamcmd/steamcmd.sh \
         +force_install_dir "$SERVER_DIR" \
         +login anonymous \
-        +app_update 320 validate \
+        +app_update 244310 validate \
         +app_update 232370 validate \
+        +app_update 232376 validate \
         +quit || {
         echo "❌ SteamCMD не удалось установить HL2:EP2. Проверьте подключение."
         exit 1
@@ -168,6 +169,10 @@ if [ ! -x "$SRCDS_RUN" ]; then
     chown -R steam:steam "$SERVER_DIR"
     find "$SERVER_DIR" -type d -exec chmod 755 {} \;
     find "$SERVER_DIR" -type f -exec chmod 644 {} \;
+    find "$SERVER_DIR" -maxdepth 1 -type f \( -name "srcds_run" -o -name "srcds_linux" \) -exec chmod +x {} \;
+    if [ -f "$SERVER_DIR/hl2mp/bin/server_srv.so" ]; then
+        chmod +x "$SERVER_DIR/hl2mp/bin/server_srv.so"
+    fi
 fi
 
 # === 4. Исправление steamclient.so (обязательно перед запуском) ===
@@ -277,18 +282,10 @@ else
     fi
 fi
 
-# 3. 32-битные зависимости client.so (если файл существует)
-if [ -f "$SERVER_DIR/obsidian/bin/server.so" ]; then
-    echo -n "3. server.so: "
-    if ldd "$SERVER_DIR/obsidian/bin/server.so" 2>&1 | grep -q "not found"; then
-        echo "⚠️  Есть зависимости с ошибками:"
-        ldd "$SERVER_DIR/obsidian/bin/server.so" 2>&1 | grep "not found" | while read line; do echo "   ❌ $line"; done
-        DIAG_WARNINGS=$((DIAG_WARNINGS + 1))
-    else
-        echo "✅ Зависимости OK"
-    fi
+if [ -f "$SERVER_DIR/hl2mp/bin/server_srv.so" ]; then
+    echo "✅ server_srv.so: найден"
 else
-    echo "3. server.so: ⚠️  Не найден. Сервер не запустится."
+    echo "❌ server_srv.so: не найден"
     DIAG_ERRORS=$((DIAG_ERRORS + 1))
 fi
 
