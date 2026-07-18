@@ -20,7 +20,7 @@ export DEBIAN_FRONTEND=noninteractive
 # Сначала базовые зависимости + gnupg2 и 32-bit develop-пакеты
 apt-get update -qq && apt-get install -y --no-install-recommends \
     lib32gcc-s1 lib32stdc++6 libstdc++6:i386 libtinfo6:i386 libcurl4:i386 \
-    p7zip-full wget gosu gnupg2 build-essential libc6-dev-i386 \
+    p7zip-full wget gosu gnupg2 build-essential libc6-dev-i386 gcc-multilib \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 echo "=== Проверка компиляции 32-битного кода ==="
@@ -150,6 +150,7 @@ if [ ! -x "$SRCDS_RUN" ]; then
             mkdir -p "$SERVER_DIR/obsidian/cfg"
             cp "$SERVER_DIR/server/server.cfg" "$SERVER_DIR/obsidian/cfg/server.cfg"
             echo "✅ server.cfg восстановлен (локально)"
+        fi
         # Копируем root-файлы мода (например, map .bsp)
         find "$MOD_TEMP" -maxdepth 1 -type f \( -name "*.bsp" -o -name "*.vbsp" \) -exec cp {} "$SERVER_DIR/" \; 2>/dev/null || true
     else
