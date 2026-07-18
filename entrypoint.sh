@@ -99,6 +99,7 @@ if [ ! -x "$SRCDS_RUN" ]; then
     /home/steam/steamcmd/steamcmd.sh \
         +force_install_dir "$SERVER_DIR" \
         +login anonymous \
+        +app_update 320 validate \
         +app_update 232370 validate \
         +quit || {
         echo "❌ SteamCMD не удалось установить HL2:EP2. Проверьте подключение."
@@ -119,14 +120,17 @@ if [ ! -x "$SRCDS_RUN" ]; then
 
     # === Скачивание с Yandex Disk (с поддержкой редиректов и User-Agent) ===
     echo "⏳ Скачивание obsidian.7z (это может занять 10–30 минут)..."
-    if ! curl -s -L -H "User-Agent: Mozilla/5.0" \
-          -o "$SERVER_DIR/obsidian.7z" \
-          "https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=https://disk.yandex.ru/d/ZqpAD3Jcl60HjQ"; then
-        # Если не сработало — используем wget с редиректами
+    if [ ! -f "$SERVER_DIR/obsidian.7z" ]; then
         wget -q --show-progress -O "$SERVER_DIR/obsidian.7z" \
             "$SERVER_7Z_URL" || \
         wget -q -O "$SERVER_DIR/obsidian.7z" \
-            "$SERVER_7Z_URL"
+            "$SERVER_7Z_URL" || {
+            echo "❌ Не удалось скачать архив мода."
+            exit 1
+        }
+        echo "✅ Архив obsidian.7z скачан"
+    else
+        echo "📂 Архив obsidian.7z уже существует — пропускаем скачивание"
     fi
 
     # Распаковка
@@ -138,7 +142,7 @@ if [ ! -x "$SRCDS_RUN" ]; then
 
     # Копируем только содержимое папки 'obsidian'
     if [ -d "$MOD_TEMP/obsidian" ]; then
-        cp -rn "$MOD_TEMP/obsidian/"* "$SERVER_DIR/" 2>/dev/null || true
+        cp -rn "$MOD_TEMP/obsidian/"* "$SERVER_DIR/" --exclude='srcds_run' 2>/dev/null || true
 
         # === 3.3. ПРОБРОС server.cfg (ПОСЛЕ установки мода) ===
         echo "📂 Восстановление server.cfg из ./server/server.cfg"
@@ -274,17 +278,17 @@ else
 fi
 
 # 3. 32-битные зависимости client.so (если файл существует)
-if [ -f "$SERVER_DIR/obsidian/bin/client.so" ]; then
-    echo -n "3. client.so: "
-    if ldd "$SERVER_DIR/obsidian/bin/client.so" 2>&1 | grep -q "not found"; then
+if [ -f "$SERVER_DIR/obsidian/bin/server.so" ]; then
+    echo -n "3. server.so: "
+    if ldd "$SERVER_DIR/obsidian/bin/server.so" 2>&1 | grep -q "not found"; then
         echo "⚠️  Есть зависимости с ошибками:"
-        ldd "$SERVER_DIR/obsidian/bin/client.so" 2>&1 | grep "not found" | while read line; do echo "   ❌ $line"; done
+        ldd "$SERVER_DIR/obsidian/bin/server.so" 2>&1 | grep "not found" | while read line; do echo "   ❌ $line"; done
         DIAG_WARNINGS=$((DIAG_WARNINGS + 1))
     else
         echo "✅ Зависимости OK"
     fi
 else
-    echo "3. client.so: ⚠️  Не найден. Сервер не запустится."
+    echo "3. server.so: ⚠️  Не найден. Сервер не запустится."
     DIAG_ERRORS=$((DIAG_ERRORS + 1))
 fi
 
