@@ -1,7 +1,7 @@
 services:
   # Сервис 1: Игровой сервер Obsidian Conflict
   game-server:
-    image: cm2network/steamcmd:bookworm
+    image: cm2network/steamcmd:root-bookworm
     container_name: oc_game_server
     privileged: true
     volumes:

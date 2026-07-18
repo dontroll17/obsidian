@@ -7,6 +7,8 @@ STEAM_DIR="/home/steam"
 MOUNT_FIX_FLAG="$SERVER_DIR/.mountfix_done"
 SRCDS_RUN="$SERVER_DIR/srcds_run"
 
+dpkg --add-architecture i386
+
 # === 1. Подготовка среды ===
 mkdir -p "$SERVER_DIR"
 cd "$SERVER_DIR"
