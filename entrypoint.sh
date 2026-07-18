@@ -6,6 +6,7 @@ SERVER_DIR="/home/steam/hl-server"
 STEAM_DIR="/home/steam"
 MOUNT_FIX_FLAG="$SERVER_DIR/.mountfix_done"
 SRCDS_RUN="$SERVER_DIR/srcds_run"
+SERVER_7Z_URL="https://ocdownload.raidensnakesden.net/obsidianserverhotfixspecial.7z"
 
 dpkg --add-architecture i386
 
@@ -116,17 +117,16 @@ if [ ! -x "$SRCDS_RUN" ]; then
     mkdir -p "$MOD_TEMP"
     cd "$MOD_TEMP"
 
-    # Скачиваем архив (если ещё не скачан)
-    if [ ! -f "$SERVER_DIR/obsidian.7z" ]; then
-        echo "⏳ Скачивание obsidian.7z (это может занять 10–30 минут)..."
+    # === Скачивание с Yandex Disk (с поддержкой редиректов и User-Agent) ===
+    echo "⏳ Скачивание obsidian.7z (это может занять 10–30 минут)..."
+    if ! curl -s -L -H "User-Agent: Mozilla/5.0" \
+          -o "$SERVER_DIR/obsidian.7z" \
+          "https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=https://disk.yandex.ru/d/ZqpAD3Jcl60HjQ"; then
+        # Если не сработало — используем wget с редиректами
         wget -q --show-progress -O "$SERVER_DIR/obsidian.7z" \
-            "https://disk.yandex.ru/d/ZqpAD3Jcl60HjQ" || \
+            "$SERVER_7Z_URL" || \
         wget -q -O "$SERVER_DIR/obsidian.7z" \
-            "https://disk.yandex.ru/d/ZqpAD3Jcl60HjQ" || \
-        {
-            echo "❌ Не удалось скачать архив мода. Проверьте URL."
-            exit 1
-        }
+            "$SERVER_7Z_URL"
     fi
 
     # Распаковка
